@@ -2,6 +2,7 @@ package com.authorization.service;
 
 import java.util.List;
 
+import com.authorization.exceptions.UserNotFoundException;
 import com.authorization.model.User;
 
 public interface UserService {

@@ -3,6 +3,7 @@ package com.authorization.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.authorization.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public Object passwordReset(String userId, User user) {
+	public Object passwordReset(String userId, User user)  {
 		Optional<User> findUser = userRepository.findById(userId);
 		if(findUser.isPresent()) {
 			String answer = findUser.get().getAnswer();
@@ -57,7 +58,7 @@ public class UserServiceImplementation implements UserService {
 				findUser.get().setConfirmPassword(user.getConfirmPassword());
 				return userRepository.saveAndFlush(findUser.get());
 			}else {
-				return "No User Found With UserId : "+userId;
+				return "No record found";
 			}
 			
 		}

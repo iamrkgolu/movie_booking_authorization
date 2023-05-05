@@ -3,6 +3,7 @@ package com.authorization.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.authorization.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ private Map<String, String> mapObj = new HashMap<String, String>();
 	}
 	
 	@PatchMapping("/forgetPassword/{userId}")
-	public ResponseEntity<?> passwordReset(@PathVariable("userId") String userId, @RequestBody User user) throws Exception
+	public ResponseEntity<?> passwordReset(@PathVariable("userId") String userId, @RequestBody User user)
 	{
 		Object passwordReset = userService.passwordReset(userId, user);
 		User user2 = userRepository.findById(userId).get();
@@ -57,7 +58,7 @@ private Map<String, String> mapObj = new HashMap<String, String>();
 		String msg=String.format("Password Reset Failed,Your answer does not match with database data %n Please Enter Correct Answer");
 		return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 	}else {
-		return new ResponseEntity<String>("No User Found with userId :"+userId, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<String>("No User Found with userId :"+userId, HttpStatus.NO_CONTENT);
 	}
 	}
 	

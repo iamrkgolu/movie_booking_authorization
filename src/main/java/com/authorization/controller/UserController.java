@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.authorization.model.User;
 import com.authorization.service.UserService;
 
+import io.jsonwebtoken.Header;
+
 @RestController
 @RequestMapping("/api/v1.0/moviebooking")
 public class UserController {

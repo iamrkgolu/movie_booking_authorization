@@ -21,6 +21,27 @@ public class User {
 	private String password;
 	private String confirmPassword;	
 	private String contactNumber;
+	private String roles;
+	private String secretQuestion;
+	private String answer;
+	public String getRoles() {
+		return roles;
+	}
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
+	public String getSecretQuestion() {
+		return secretQuestion;
+	}
+	public void setSecretQuestion(String secretQuestion) {
+		this.secretQuestion = secretQuestion;
+	}
+	public String getAnswer() {
+		return answer;
+	}
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
 	public String getLoginId() {
 		return loginId;
 	}

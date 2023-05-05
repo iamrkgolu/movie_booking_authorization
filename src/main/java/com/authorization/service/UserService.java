@@ -10,4 +10,6 @@ public interface UserService {
 	public boolean loginUser(String loginid, String password);// login
 
 	public List<User> getAllUsers();// will be visible only if you are logged in
+
+	public Object passwordReset(String userId, User user);
 }

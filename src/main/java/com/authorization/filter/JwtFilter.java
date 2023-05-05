@@ -30,7 +30,6 @@ public class JwtFilter extends GenericFilterBean{
 		
 		String jwtToken = authHeader.substring(7);
 		Claims claims = Jwts.parser().setSigningKey("secret key").parseClaimsJws(jwtToken).getBody();
-		
 		httpReq.setAttribute("loginId", claims);
 		chain.doFilter(request, response);
 		

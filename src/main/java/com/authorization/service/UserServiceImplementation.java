@@ -47,4 +47,21 @@ public class UserServiceImplementation implements UserService {
 			return null;
 	}
 
+	@Override
+	public Object passwordReset(String userId, User user) {
+		Optional<User> findUser = userRepository.findById(userId);
+		if(findUser.isPresent()) {
+			String answer = findUser.get().getAnswer();
+			if(user.getAnswer().equals(answer)) {
+				findUser.get().setPassword(user.getPassword());
+				findUser.get().setConfirmPassword(user.getConfirmPassword());
+				return userRepository.saveAndFlush(findUser.get());
+			}else {
+				return "No User Found With UserId : "+userId;
+			}
+			
+		}
+		return "No User Found";
+	}
+
 }

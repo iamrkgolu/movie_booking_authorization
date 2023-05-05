@@ -1,23 +1,22 @@
 package com.authorization.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.authorization.model.User;
+import com.authorization.repository.UserRepository;
+import com.authorization.service.AuthService;
 import com.authorization.service.UserService;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.ServletException;
 @RestController
 @RequestMapping("auth/v1")
 public class AuthController {
@@ -25,6 +24,12 @@ private Map<String, String> mapObj = new HashMap<String, String>();
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	private AuthService authService;
 	
 	
 	@PostMapping("/addUser")
@@ -38,32 +43,22 @@ private Map<String, String> mapObj = new HashMap<String, String>();
 		
 	}
 	
-	//method to generate token inside login API
-	public String generateToken(String username, String password) throws ServletException, Exception
+	@PatchMapping("/forgetPassword/{userId}")
+	public ResponseEntity<?> passwordReset(@PathVariable("userId") String userId, @RequestBody User user) throws Exception
 	{
-		String jwtToken;
-		if(username ==null || password ==null)
-		{
-			throw new ServletException("Please enter valid credentials");
-		}
+		Object passwordReset = userService.passwordReset(userId, user);
+		User user2 = userRepository.findById(userId).get();
 		
-		boolean flag = userService.loginUser(username, password);
-		
-		if(!flag)
-		{
-			throw new ServletException("Invalid credentials");
-		}
-		
-		else
-		{
-			jwtToken = Jwts.builder().setSubject(username).setIssuedAt(new Date())
-						.setExpiration(new Date(System.currentTimeMillis()+300000))
-						.signWith(SignatureAlgorithm.HS256, "secret key").compact();
-						
-		}
-		
-		return jwtToken;
-		
+		if(passwordReset!=null && user2.getAnswer().equals(user.getAnswer()))
+	{
+			String msg=String.format("Password Reset Successfully, Your current password : %s %n Use This Password for Login",user.getPassword());
+		return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+	}else if(passwordReset!=null && user2.getAnswer()!=user.getAnswer()){
+		String msg=String.format("Password Reset Failed,Your answer does not match with database data %n Please Enter Correct Answer");
+		return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+	}else {
+		return new ResponseEntity<String>("No User Found with userId :"+userId, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 	}
 	
 	@PostMapping("/login")
@@ -72,7 +67,7 @@ private Map<String, String> mapObj = new HashMap<String, String>();
 	
 		try
 		{
-			String jwtToken = generateToken(user.getLoginId(), user.getPassword());
+			String jwtToken = authService.generateToken(user.getLoginId(), user.getPassword());
 			mapObj.put("Message", "User successfully logged in");
 			mapObj.put("Token:", jwtToken);
 			

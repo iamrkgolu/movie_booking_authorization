@@ -34,8 +34,10 @@ public class UserServiceImplementation implements UserService {
 		System.out.println("User: " + user1.getLoginId());
 		if (user1 != null) {
 			return true;
+		}else{
+			return false;
 		}
-		return false;
+
 	}
 
 	@Override

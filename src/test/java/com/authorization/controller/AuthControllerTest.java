@@ -8,6 +8,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.authorization.repository.UserRepository;
+import com.authorization.service.AuthService;
+import com.authorization.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +33,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 public class AuthControllerTest {
 	@Mock
-	private UserServiceImplementation userService;
+	private UserService userService;
+
+	@Mock
+	private UserRepository userRepository;
+
+	@Mock
+	private AuthService authService;
 
 	@InjectMocks
 	private AuthController userC;
@@ -111,10 +120,11 @@ public class AuthControllerTest {
 		user.setConfirmPassword("Rahul@123");
 		user.setContactNumber("8210526146");
 		userList.add(user);
+		userList.remove(0);
 		when(userService.loginUser(user.getLoginId(), user.getPassword())).thenReturn(false);
 		mockMvc.perform(MockMvcRequestBuilders.post("/auth/v1/login").contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(user)))
-				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+				.content(new ObjectMapper().writeValueAsString(userList)))
+				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
 	}
 

@@ -50,7 +50,7 @@ private Map<String, String> mapObj = new HashMap<String, String>();
 		Object passwordReset = userService.passwordReset(userId, user);
 		User user2 = userRepository.findById(userId).get();
 		
-		if(passwordReset!=null && user2.getAnswer().equals(user.getAnswer()))
+		if(passwordReset!=null && user2.getAnswer().equals(user.getAnswer())&& user.getPassword().equals(user.getConfirmPassword()))
 	{
 			String msg=String.format("Password Reset Successfully, Your current password : %s %n Use This Password for Login",user.getPassword());
 		return new ResponseEntity<String>(msg, HttpStatus.CREATED);

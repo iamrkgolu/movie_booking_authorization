@@ -55,7 +55,7 @@ public class UserServiceImplementation implements UserService {
 		Optional<User> findUser = userRepository.findById(userId);
 		if(findUser.isPresent()) {
 			String answer = findUser.get().getAnswer();
-			if(user.getAnswer().equals(answer)) {
+			if(user.getAnswer().equals(answer) && user.getPassword().equals(user.getConfirmPassword())) {
 				findUser.get().setPassword(user.getPassword());
 				findUser.get().setConfirmPassword(user.getConfirmPassword());
 				return userRepository.saveAndFlush(findUser.get());

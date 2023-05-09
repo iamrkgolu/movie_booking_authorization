@@ -1,9 +1,11 @@
 package com.authorization.service;
 
+import com.authorization.model.Movie;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -31,6 +33,12 @@ public class AuthService {
 
         }
         return jwtToken;
+
+    }
+    @KafkaListener(topics = {"movie-app"})
+    public void consumeMovieData(Movie movie){
+        System.out.printf("New Released Movie Details %n Movie Id: %d %n Movie Name: %s %n Language: %s %n Genre: %s %n",movie.getMovieId(), movie.getMovieName(),movie.getLanguage(),movie.getGenre());
+
 
     }
 

@@ -128,6 +128,7 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<finalName>auth</finalName>
 	</build>
 
 </project>

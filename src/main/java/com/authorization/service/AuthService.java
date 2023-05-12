@@ -27,8 +27,8 @@ public class AuthService {
         if (!flag) {
             throw new ServletException("Invalid credentials");
         } else {
-            jwtToken = Jwts.builder().setSubject(username).setAudience("USER").setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + 300000))
+            jwtToken = Jwts.builder().setSubject(username).setAudience("USER").claim("admin", true).setIssuedAt(new Date())
+                    .setExpiration(new Date(System.currentTimeMillis() + 300000*60))
                     .signWith(SignatureAlgorithm.HS256, "secret key").compact();
 
         }
